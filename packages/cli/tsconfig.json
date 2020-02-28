@@ -1,0 +1,30 @@
+
+{
+  "extends": "../../tsconfig.json",
+    "compilerOptions": {
+        "outDir": "dist",
+        "rootDir": "./src",
+        "target": "es6",
+        "module": "commonjs",
+        "skipLibCheck": true,
+        "baseUrl": ".",
+        "jsx": "react",
+        "allowSyntheticDefaultImports": true,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "sourceMap": true,
+        "allowJs": true,
+        "lib": [
+          "es6",
+          "dom",
+          "esnext"
+        ],
+        "moduleResolution": "node"
+        
+        
+    },
+    "include": [
+        "src"
+    ],
+    "references": [{"path": "../lib"}]
+}

@@ -1,0 +1,51 @@
+version: '3'
+services:
+    db:
+        image: mongo
+        environment:
+          - MONGO_INITDB_ROOT_USERNAME
+          - MONGO_INITDB_ROOT_PASSWORD
+        command: --bind_ip_all
+        ports:
+          - '27777:27017'
+    frontend:
+        build:
+            context: ./packages/frontend
+            dockerfile: Dockerfile.prod
+        image: 0x/frontend:latest
+        ports: 
+            - 8080:80
+        labels: 
+            - "traefik.enable=true"
+            - "traefik.http.routers.frontend.rule=Host(`zrx.localhost`) || HostRegexp(`{.*}.localhost`) || HostRegexp(`{.*}.local`)"
+            - "traefik.http.routers.frontend.entrypoints=web"
+    api:
+        build:
+            context: ./packages/api
+            dockerfile: Dockerfile.prod
+        image: 0x/api:latest
+        ports: 
+            - 8080:80
+        labels: 
+            - "traefik.enable=true"
+            - "traefik.http.routers.api.rule=Host(`zrx.localhost`) || HostRegexp(`{.*}.localhost`) || HostRegexp(`{.*}.local`)"
+            - "traefik.http.routers.api.entrypoints=web"
+    traefik:
+        image: "traefik"
+        command:
+            - --providers.docker=true
+            - --api.insecure
+            - "--providers.docker.endpoint=unix:///var/run/docker.sock"
+            # - "--providers.docker.swarmMode=true"
+            - "--entrypoints.web.address=:80"
+            
+        ports:
+            - "80:80"
+            - "8080:8080"
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock:ro
+        deploy:
+            replicas: 1
+            placement:
+                constraints:
+                    - node.role == manager

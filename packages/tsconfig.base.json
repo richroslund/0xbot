@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+      "baseUrl": "./",
+      "composite": true,
+      "paths": {
+        "@0x/lib": ["lib/src/*"]
+      }
+    },
+    "files": [],
+    "include": [],
+    "references": [{
+      "path": "../lib",
+      
+    }]
+    
+  }
+  

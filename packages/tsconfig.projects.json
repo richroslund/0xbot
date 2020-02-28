@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+      "composite": true
+    },
+    "files": [],
+    "include": [],
+    "references": [
+      {
+        "path": "./lib/tsconfig.json"
+      },
+      {
+        "path": "./cli/tsconfig.json"
+      },
+      {
+        "path": "./api/tsconfig.json"
+      }
+    ]
+  }
+  
