@@ -2,12 +2,21 @@ version: '3'
 services:
     db:
         image: mongo
-        environment:
-          - MONGO_INITDB_ROOT_USERNAME
-          - MONGO_INITDB_ROOT_PASSWORD
         command: --bind_ip_all
         ports:
-          - '27777:27017'
+            - '27777:27017'
+        env_file:
+        - .db.env
+    dbui:
+        image: mongo-express
+        restart: always
+        ports:
+            - 27778:8081
+        labels:
+            - 'traefik.frontend.rule=Host:dbui'
+            - 'traefik.port=8081'
+        env_file:
+            - .db.env
     frontend:
         build:
             context: ./packages/frontend

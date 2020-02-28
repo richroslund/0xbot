@@ -179,7 +179,6 @@ export interface PriceFeed {
   quoteToken: string;
   getBidAskPrices?: () => Promise<{ bid: number; ask: number }>;
   getMidPrice: () => Promise<number | undefined>;
-  getQuotePrice: () => Promise<number | undefined>;
 }
 export interface TradingConfig {
   fees?: {
@@ -194,7 +193,7 @@ export interface TradingConfig {
     ask: number;
     bid: number;
   };
-  min: {
+  minAmount: {
     quote?: number;
     base?: number;
   };

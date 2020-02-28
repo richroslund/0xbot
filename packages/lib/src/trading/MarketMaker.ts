@@ -24,9 +24,9 @@ export class MarketMaker {
     });
 
   public orders = async (address: string): Promise<PartialOrder[]> => {
-    const { quoteToken, baseToken, priceFeed, strategy, thresholdFromMid, bidAskJump, inventorySkew, min } = this._config;
+    const { quoteToken, baseToken, priceFeed, strategy, thresholdFromMid, bidAskJump, inventorySkew, minAmount } = this._config;
     let price = await priceFeed.getMidPrice();
-    const quotePrice = (await priceFeed.getQuotePrice()) || 1;
+
     let orders: PartialOrder[] = [];
     if (price === undefined) {
       const priceErr = {
@@ -38,7 +38,7 @@ export class MarketMaker {
     const availableBase = _.floor(await this.availableBalance(address, baseToken, inventorySkew.base), 2);
     const availableQuote = _.floor(await this.availableBalance(address, quoteToken, inventorySkew.quote), 2);
     if (baseToken === priceFeed.quoteToken && quoteToken === priceFeed.baseToken) {
-      price = 1 / price / quotePrice;
+      price = 1 / price;
     }
     console.log({ availableBase, availableQuote });
 
@@ -49,7 +49,7 @@ export class MarketMaker {
       const askPriceIncrease = priceIncrease.ask;
       const askAmountIncrease = amountIncrease.ask;
       const perAskOrderAmount = availableBase / orderCount.ask;
-      const minBase = min.base || 0.01;
+      const minBase = minAmount.base || 0.01;
       if (availableBase > minBase) {
         const askPrices = _.times(orderCount.ask).reduce((acc: PartialOrder[], ind: number) => {
           const amtPercentage = 1 + (ind - orderCount.ask / 2) * askAmountIncrease;
@@ -73,7 +73,7 @@ export class MarketMaker {
       const bidPriceIncrease = priceIncrease.bid;
       const bidAmountIncrease = amountIncrease.bid;
       const perBidOrderAmount = availableQuote / orderCount.bid;
-      const minQuote = min.quote || 0.01;
+      const minQuote = minAmount.quote || 0.01;
       if (availableQuote > minQuote) {
         const bids = _.times(orderCount.bid).reduce((acc: PartialOrder[], ind: number) => {
           const amtPercentage = 1 + (ind - orderCount.ask / 2) * bidAmountIncrease;

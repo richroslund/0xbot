@@ -1,4 +1,4 @@
-import { PopulatedSignedZrxOrders } from './../../lib/src/orders';
+import { PopulatedSignedZrxOrders } from '@0x/lib/src/orders';
 import _ from 'lodash';
 
 export const orderToValues = (ord: PopulatedSignedZrxOrders) => {

@@ -4,6 +4,7 @@
   "scripts": {
     "clean":"lerna run clean",
     "build":"npx tsc --build packages/tsconfig.projects.json",
+    "db":"docker-compose up -d db dbui",
     "watch":"npx tsc --build --watch packages/tsconfig.projects.json",
     "predev":"lerna run clean",
     "dev":"yarn watch",

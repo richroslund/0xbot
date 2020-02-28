@@ -1,4 +1,4 @@
-import { Config } from './../config';
+import { Config } from '../config';
 import { Web3Wrapper } from '@0x/web3-wrapper';
 import { SignedOrder, SupportedProvider } from '0x.js';
 import { ContractWrappers } from '@0x/contract-wrappers';

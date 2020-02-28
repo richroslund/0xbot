@@ -9,7 +9,7 @@ export { ProductTicker } from 'coinbase-pro';
 const getTicker = async (symbol: string) => {
   try {
     //const ticker = await new CoinbasePro.PublicClient().getProductTicker(symbol);
-    const ticker = await axios.get<CoinbasePro.ProductTicker>(`https://api.pro.coinbase.com/products/ETH-USD/ticker`).then(res => res.data);
+    const ticker = await axios.get<CoinbasePro.ProductTicker>(`https://api.pro.coinbase.com/products/${symbol}/ticker`).then(res => res.data);
     return {
       ticker,
       symbol,

@@ -1,5 +1,5 @@
-import { getAddress } from './../../state/selector';
-import { ThunkResult } from './../../state/thunks';
+import { getAddress } from '../../state/selector';
+import { ThunkResult } from '../../state/thunks';
 import { ContractWrappers } from '@0x/contract-wrappers';
 import { Staking } from '@0x/lib';
 import { Web3ProviderEngine, SupportedProvider } from '0x.js';
