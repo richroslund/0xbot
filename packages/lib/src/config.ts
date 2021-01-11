@@ -52,7 +52,8 @@ export const APIURL = envStr('APIURL', 'https://api.0x.org');
 export const ORDERSIZETHRESHOLD = 0.051;
 export const KEYSTORE = envStr('KEYSTORE', '');
 export const PASSWORD = envStr('PASSWORD', '');
-
+export const ETHERSCANKEY = envStr('ETHERSCANKEY', '');
+export const CONNECTIONSTRING = envStr('CONNECTIONSTRING', '');
 export const CONSTANTS = {
   ta: {
     atrPeriod: 14,

@@ -16,21 +16,17 @@
     "eslint:recommended",
     "plugin:@typescript-eslint/eslint-recommended",
         "plugin:@typescript-eslint/recommended",
-    "plugin:react-app/recommended",
-    "plugin:prettier/recommended"
+    "plugin:prettier/recommended",
+    "plugin:jsx-a11y/recommended",  "prettier"
+    
   ],
-  "settings": {
-    "react": {
-      "pragma": "React",
-      "version": "detect"
-    }
-  },
   "rules": {
     "react/prop-types": "off",
     /**
      * @description rules of eslint-plugin-react-hooks
      */
-    "react-hooks/rules-of-hooks": "error",
+     "react-hooks/rules-of-hooks": "warn",
+     "react-hooks/exhaustive-deps": "warn",
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/no-unused-vars":"off",
     /**

@@ -15,4 +15,5 @@ export * from './wallet';
 export * from './zrxApiTypes';
 export * from './zrxWrapper';
 export * from './orderBuilder';
+export * from './marketmaking';
 export * from './trading';

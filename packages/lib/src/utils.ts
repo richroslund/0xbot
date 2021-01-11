@@ -4,7 +4,7 @@ import { SignedOrder } from '@0x/mesh-rpc-client';
 
 import { BigNumber } from '0x.js';
 import { Web3Wrapper, TransactionReceiptWithDecodedLogs } from '@0x/web3-wrapper';
-import { TX_DEFAULTS, TEN_MINUTES_MS, ONE_SECOND_MS } from './config';
+import { TX_DEFAULTS, TEN_MINUTES_MS, ONE_SECOND_MS, DECIMALS } from './config';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { round } from 'lodash';
@@ -62,3 +62,6 @@ export const fromNow = (date: Date) => {
   }
   return dayjs(date).fromNow();
 };
+
+export const toNumberVal = (value: string | number | BigNumber) => (typeof value === 'number' ? value : BigNumber.isBigNumber(value) ? value.toNumber() : new BigNumber(value).toNumber());
+export const toUnit = (value: string | number | BigNumber) => Web3Wrapper.toUnitAmount(BigNumber.isBigNumber(value) ? value : new BigNumber(value), DECIMALS).toNumber();

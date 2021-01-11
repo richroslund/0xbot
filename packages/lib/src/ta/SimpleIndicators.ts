@@ -34,7 +34,7 @@ export class SimpleIndicators {
     return new ATR({ ...candleValues, period: CONSTANTS.ta.atrPeriod });
   };
 
-  public rsi = (field: keyof Candle = 'close', rsiPeriod: number = 14, stochasticPeriod: number = 14) => new StochasticRSI({ values: this.candleValues(field), rsiPeriod, stochasticPeriod, kPeriod: CONSTANTS.ta.stochRSI_k, dPeriod: CONSTANTS.ta.stochRSI_d });
+  public rsi = (field: keyof Candle = 'close', rsiPeriod = 14, stochasticPeriod = 14) => new StochasticRSI({ values: this.candleValues(field), rsiPeriod, stochasticPeriod, kPeriod: CONSTANTS.ta.stochRSI_k, dPeriod: CONSTANTS.ta.stochRSI_d });
 
   public fibonnaciBands = (latest: CandleData, price: number) => {
     const atr = this.atr().nextValue(latest);

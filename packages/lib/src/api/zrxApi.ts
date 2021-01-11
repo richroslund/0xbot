@@ -89,6 +89,21 @@ export interface QuoteResponse {
   buyAmount: string;
   sellAmount: string;
   orders: SignedOrder[];
+  from: string;
+  sources: { name: string; proportion: string }[];
+}
+export interface TransformedQuoteResponse {
+  price: number;
+  value: BigNumber;
+  gasPrice: BigNumber;
+  gas: BigNumber;
+  from: string;
+  protocolFee: BigNumber;
+  buyAmount: BigNumber;
+  sellAmount: BigNumber;
+  to: string;
+  data: string;
+  orders: SignedOrder[];
   sources: { name: string; proportion: string }[];
 }
 export class ZrxApi {
@@ -149,6 +164,10 @@ export class ZrxApi {
       Promise.resolve([])
     );
   };
+  public orderInfo = async (hash: string) => {
+    const requestUrl = `${APIURL}/sra/v3/order/${hash}`;
+    return await axios.get<SignedOrderWithMetadata>(requestUrl).then(res => _.first(setupOrders([res.data])));
+  };
   public getOrders = async (ordersRequest?: OrdersRequest) => {
     const requestUrl = `${APIURL}/sra/v3/orders${ordersRequest ? '?' + qs.stringify(ordersRequest) : ''}`;
     const res = await axios.get<PaginatedOrders>(requestUrl).then(res => ({ ...res.data, records: setupOrders(res.data.records) }));
@@ -163,7 +182,6 @@ export class ZrxApi {
       buyAmount: buyAmount ? (BigNumber.isBigNumber(buyAmount) ? buyAmount.toString() : Web3Wrapper.toBaseUnitAmount(buyAmount, DECIMALS).toString()) : undefined,
     });
     const quoteUrl = `${APIURL}/swap/v0/quote?${queryString}`;
-    console.log(quoteUrl);
     return await axios
       .get<QuoteResponse>(quoteUrl)
       .then(res => res.data)
@@ -171,6 +189,23 @@ export class ZrxApi {
         console.log('request quote error', err.code, err.response?.data);
         return undefined;
       });
+  };
+  public parsedQuote = async (request: QuoteRequest) => {
+    return this.quote(request).then(res => {
+      if (res === undefined) {
+        return undefined;
+      }
+      return {
+        ...res,
+        price: parseFloat(res.price),
+        value: new BigNumber(res.value),
+        gasPrice: new BigNumber(res.gasPrice),
+        gas: new BigNumber(res.gas),
+        protocolFee: new BigNumber(res.protocolFee),
+        buyAmount: new BigNumber(res.buyAmount),
+        sellAmount: new BigNumber(res.sellAmount),
+      };
+    });
   };
 
   public getOrderBookAndBestPriceAsync = async (contracts: ContractWrappers, assets: AssetData, assetValues?: { base: string; quote: string }): Promise<OrderBookAndBestPriceType> => {

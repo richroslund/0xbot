@@ -14,7 +14,11 @@ export class Account {
       dai: await balance(address, provider, ADDRESSES.dai),
     };
     const ethBalance = await new WalletInfo(provider, address).Balance();
-
-    return { balances, ethBalance };
+    const balancesByAddress = {
+      [contracts.contractAddresses.zrxToken]: balances.zrx,
+      [contracts.contractAddresses.etherToken]: balances.weth,
+      [ADDRESSES.dai]: balances.dai,
+    };
+    return { balances, ethBalance, balancesByAddress };
   };
 }

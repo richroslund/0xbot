@@ -135,6 +135,7 @@ export type KnownTokens = keyof TokenBalances;
 
 export interface Balances {
   balances: TokenBalances;
+  balancesByAddress: { [address: string]: number };
   ethBalance: number;
 }
 
@@ -158,7 +159,7 @@ export interface EtherscanGasOracleResponse {
   message: string;
   result: EtherscanGasPrices;
 }
-export interface MultipleOrderStrategy {
+export interface MultipleOrderMarketMaker {
   kind: 'multiple';
   orderCount: {
     ask: number;
@@ -173,14 +174,24 @@ export interface MultipleOrderStrategy {
     bid: number;
   };
 }
-export type TradingStrategies = MultipleOrderStrategy;
+export interface RangeOrderMarketMaker {
+  kind: 'multipleByRange';
+  amountIncrease: {
+    ask: number;
+    bid: number;
+  };
+  askPrices: number[];
+  bidPrices: number[];
+}
+
+export type MarketMakerStrategies = MultipleOrderMarketMaker | RangeOrderMarketMaker;
 export interface PriceFeed {
   baseToken: string;
   quoteToken: string;
   getBidAskPrices?: () => Promise<{ bid: number; ask: number }>;
   getMidPrice: () => Promise<number | undefined>;
 }
-export interface TradingConfig {
+export interface MarketMakingConfig {
   fees?: {
     recipient: string;
     makerFee?: BigNumber;
@@ -193,13 +204,13 @@ export interface TradingConfig {
     ask: number;
     bid: number;
   };
+  bidAskJump: boolean;
+  inventorySkew: { base?: number; quote?: number };
   minAmount: {
     quote?: number;
     base?: number;
   };
-  bidAskJump: boolean;
-  inventorySkew: { base?: number; quote?: number };
-  strategy: TradingStrategies;
+
+  strategy: MarketMakerStrategies;
   priceFeed: PriceFeed;
-  baseAmount: number;
 }

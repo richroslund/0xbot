@@ -4,30 +4,21 @@ services:
         image: mongo
         command: --bind_ip_all
         ports:
-            - '27777:27017'
+            - '27000:27017'
         env_file:
         - .db.env
     dbui:
         image: mongo-express
         restart: always
         ports:
-            - 27778:8081
+            - 0:8081
         labels:
-            - 'traefik.frontend.rule=Host:dbui'
-            - 'traefik.port=8081'
+            - traefik.enable=true
+            - traefik.http.routers.dbui.rule=Host(`0xdb.localhost`)
+            - traefik.http.routers.dbui.entrypoints=web
+            - traefik.http.services.dbui.loadbalancer.server.port=8081
         env_file:
             - .db.env
-    frontend:
-        build:
-            context: ./packages/frontend
-            dockerfile: Dockerfile.prod
-        image: 0x/frontend:latest
-        ports: 
-            - 8080:80
-        labels: 
-            - "traefik.enable=true"
-            - "traefik.http.routers.frontend.rule=Host(`zrx.localhost`) || HostRegexp(`{.*}.localhost`) || HostRegexp(`{.*}.local`)"
-            - "traefik.http.routers.frontend.entrypoints=web"
     api:
         build:
             context: ./packages/api
@@ -40,21 +31,18 @@ services:
             - "traefik.http.routers.api.rule=Host(`zrx.localhost`) || HostRegexp(`{.*}.localhost`) || HostRegexp(`{.*}.local`)"
             - "traefik.http.routers.api.entrypoints=web"
     traefik:
-        image: "traefik"
+        image: "traefik:v2.1"
         command:
+            - --entrypoints.web.address=:80
             - --providers.docker=true
             - --api.insecure
-            - "--providers.docker.endpoint=unix:///var/run/docker.sock"
-            # - "--providers.docker.swarmMode=true"
-            - "--entrypoints.web.address=:80"
-            
+            - --ping=true
+            - --providers.docker.exposedbydefault=true
+            - --entryPoints.ping.address=:8082
+            - --ping.entryPoint=ping
         ports:
             - "80:80"
             - "8080:8080"
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock:ro
-        deploy:
-            replicas: 1
-            placement:
-                constraints:
-                    - node.role == manager
+        

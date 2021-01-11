@@ -15,7 +15,7 @@ export class SRAWrapper {
       this.url = relayOrUrl;
     }
   }
-  private sra = () => new HttpClient(this.url);
+  public sra = () => new HttpClient(this.url);
   public orderWithConfig = async (order: Order) => {
     const configOrder = await this.sra().getOrderConfigAsync(order);
     return {
